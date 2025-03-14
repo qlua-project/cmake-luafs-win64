@@ -1,0 +1,169 @@
+Microsoft (R) COFF/PE Dumper Version 14.43.34808.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+Dump of file ..\cmake-build-release-x64\lfs.dll
+
+File Type: DLL
+
+  Section contains the following imports:
+
+    lua54.dll
+             180004200 Import Address Table
+             180005360 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          11 luaL_error
+                           F luaL_checkudata
+                          1B luaL_newmetatable
+                          1E luaL_optinteger
+                          20 luaL_optnumber
+                           A luaL_checklstring
+                           4 luaL_argerror
+                          10 luaL_checkversion_
+                          76 lua_setmetatable
+                          68 lua_rawset
+                           C luaL_checkoption
+                          26 luaL_setfuncs
+                          70 lua_setfield
+                          71 lua_setglobal
+                          78 lua_settop
+                          54 lua_newuserdatauv
+                          37 lua_createtable
+                          3C lua_getfield
+                          57 lua_pushboolean
+                          58 lua_pushcclosure
+                          59 lua_pushfstring
+                          5F lua_pushstring
+                          5C lua_pushlstring
+                          5A lua_pushinteger
+                          5D lua_pushnil
+                          85 lua_touserdata
+                          81 lua_tolstring
+                          7D lua_toboolean
+                          86 lua_type
+                          4D lua_isstring
+                          61 lua_pushvalue
+                          48 lua_gettop
+
+    KERNEL32.dll
+             180004000 Import Address Table
+             180005160 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          C6 CreateFileA
+                         38E IsDebuggerPresent
+                         378 InitializeSListHead
+                         125 DisableThreadLibraryCalls
+                         2F8 GetSystemTimeAsFileTime
+                         226 GetCurrentThreadId
+                         222 GetCurrentProcessId
+                         45B QueryPerformanceCounter
+                         395 IsProcessorFeaturePresent
+                         5AC TerminateProcess
+                         221 GetCurrentProcess
+                         58D SetUnhandledExceptionFilter
+                         5CE UnhandledExceptionFilter
+                         4EE RtlVirtualUnwind
+                         4E7 RtlLookupFunctionEntry
+                         4DF RtlCaptureContext
+                         25A GetFinalPathNameByHandleA
+                          89 CloseHandle
+                         26B GetLastError
+                          CF CreateHardLinkA
+                          F0 CreateSymbolicLinkA
+                         24C GetFileAttributesExA
+
+    VCRUNTIME140.dll
+             1800040B8 Import Address Table
+             180005218 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          25 __std_type_info_destroy_list
+                          3E memset
+                           8 __C_specific_handler
+                          3D memmove
+                          3C memcpy
+
+    api-ms-win-crt-runtime-l1-1-0.dll
+             180004148 Import Address Table
+             1800052A8 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          22 _execute_onexit_table
+                          34 _initialize_onexit_table
+                          21 _errno
+                          33 _initialize_narrow_environment
+                          18 _configure_narrow_argv
+                          3F _seh_filter_dll
+                          64 strerror
+                          37 _initterm_e
+                          16 _cexit
+                          36 _initterm
+
+    api-ms-win-crt-stdio-l1-1-0.dll
+             1800041A0 Import Address Table
+             180005300 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          89 ftell
+                          87 fseek
+                           D __stdio_common_vsprintf
+                          44 _locking
+                          57 _setmode
+                          26 _fileno
+                          3B _getcwd
+
+    api-ms-win-crt-string-l1-1-0.dll
+             1800041E0 Import Address Table
+             180005340 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          8E strncmp
+
+    api-ms-win-crt-heap-l1-1-0.dll
+             180004128 Import Address Table
+             180005288 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          18 free
+                          19 malloc
+                          1A realloc
+
+    api-ms-win-crt-filesystem-l1-1-0.dll
+             1800040E8 Import Address Table
+             180005248 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                           2 _chdir
+                          19 _mkdir
+                          1A _rmdir
+                           D _findnext64i32
+                           9 _findfirst64i32
+                          1F _stat64
+                           5 _findclose
+
+    api-ms-win-crt-time-l1-1-0.dll
+             1800041F0 Import Address Table
+             180005350 Import Name Table
+                     0 time date stamp
+                     0 Index of first forwarder reference
+
+                          35 _utime64
+
+  Summary
+
+        1000 .data
+        1000 .pdata
+        2000 .rdata
+        1000 .reloc
+        1000 .rsrc
+        3000 .text
