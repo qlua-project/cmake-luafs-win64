@@ -1,4 +1,4 @@
-Microsoft (R) COFF/PE Dumper Version 14.50.35723.0
+Microsoft (R) COFF/PE Dumper Version 14.43.34808.0
 Copyright (C) Microsoft Corporation.  All rights reserved.
 
 
@@ -9,8 +9,8 @@ File Type: DLL
   Section contains the following imports:
 
     lua54.dll
-             1800041C8 Import Address Table
-             180005308 Import Name Table
+             180004200 Import Address Table
+             180005360 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -49,27 +49,28 @@ File Type: DLL
 
     KERNEL32.dll
              180004000 Import Address Table
-             180005140 Import Name Table
+             180005160 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
-                          DE CreateFileA
-                         39A InitializeSListHead
-                         142 DisableThreadLibraryCalls
-                         31A GetSystemTimeAsFileTime
-                         246 GetCurrentThreadId
-                         242 GetCurrentProcessId
-                         481 QueryPerformanceCounter
-                         26C GetFileAttributesExA
-                         27B GetFinalPathNameByHandleA
-                          9D CloseHandle
-                         28D GetLastError
-                          E7 CreateHardLinkA
-                         10A CreateSymbolicLinkA
+                          C6 CreateFileA
+                         378 InitializeSListHead
+                         125 DisableThreadLibraryCalls
+                         2F8 GetSystemTimeAsFileTime
+                         226 GetCurrentThreadId
+                         222 GetCurrentProcessId
+                         45B QueryPerformanceCounter
+                         24C GetFileAttributesExA
+                         25A GetFinalPathNameByHandleA
+                          89 CloseHandle
+                         26B GetLastError
+                          CF CreateHardLinkA
+                          F0 CreateSymbolicLinkA
+                         38E IsDebuggerPresent
 
     VCRUNTIME140.dll
-             180004070 Import Address Table
-             1800051B0 Import Name Table
+             1800040B8 Import Address Table
+             180005218 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -77,10 +78,11 @@ File Type: DLL
                           25 __std_type_info_destroy_list
                           3D memmove
                           3C memcpy
+                          3E memset
 
     api-ms-win-crt-runtime-l1-1-0.dll
-             1800040F8 Import Address Table
-             180005238 Import Name Table
+             180004148 Import Address Table
+             1800052A8 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -96,8 +98,8 @@ File Type: DLL
                           64 strerror
 
     api-ms-win-crt-stdio-l1-1-0.dll
-             180004150 Import Address Table
-             180005290 Import Name Table
+             1800041A0 Import Address Table
+             180005300 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -110,8 +112,8 @@ File Type: DLL
                           3B _getcwd
 
     api-ms-win-crt-heap-l1-1-0.dll
-             1800040D8 Import Address Table
-             180005218 Import Name Table
+             180004128 Import Address Table
+             180005288 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -120,8 +122,8 @@ File Type: DLL
                           19 malloc
 
     api-ms-win-crt-filesystem-l1-1-0.dll
-             180004098 Import Address Table
-             1800051D8 Import Name Table
+             1800040E8 Import Address Table
+             180005248 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -134,23 +136,20 @@ File Type: DLL
                           1F _stat64
 
     api-ms-win-crt-time-l1-1-0.dll
-             1800041B8 Import Address Table
-             1800052F8 Import Name Table
+             1800041F0 Import Address Table
+             180005350 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
                           35 _utime64
 
     api-ms-win-crt-string-l1-1-0.dll
-             180004190 Import Address Table
-             1800052D0 Import Name Table
+             1800041E0 Import Address Table
+             180005340 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
-                          86 strcmp
                           8E strncmp
-                          8B strlen
-                          88 strcpy
 
   Summary
 
