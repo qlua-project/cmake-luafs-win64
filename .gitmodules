@@ -1,0 +1,3 @@
+[submodule "luafs"]
+	path = src
+	url = https://github.com/lunarmodules/luafilesystem.git
