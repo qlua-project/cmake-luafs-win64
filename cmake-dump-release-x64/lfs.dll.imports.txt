@@ -9,8 +9,8 @@ File Type: DLL
   Section contains the following imports:
 
     lua54.dll
-             1800041D0 Import Address Table
-             180005310 Import Name Table
+             1800041C8 Import Address Table
+             180005308 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -92,13 +92,12 @@ File Type: DLL
                           37 _initterm_e
                           18 _configure_narrow_argv
                           36 _initterm
-                          38 _invalid_parameter_noinfo
                           21 _errno
                           64 strerror
 
     api-ms-win-crt-stdio-l1-1-0.dll
-             180004158 Import Address Table
-             180005298 Import Name Table
+             180004150 Import Address Table
+             180005290 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
@@ -135,16 +134,16 @@ File Type: DLL
                           1F _stat64
 
     api-ms-win-crt-time-l1-1-0.dll
-             1800041C0 Import Address Table
-             180005300 Import Name Table
+             1800041B8 Import Address Table
+             1800052F8 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 
                           35 _utime64
 
     api-ms-win-crt-string-l1-1-0.dll
-             180004198 Import Address Table
-             1800052D8 Import Name Table
+             180004190 Import Address Table
+             1800052D0 Import Name Table
                      0 time date stamp
                      0 Index of first forwarder reference
 

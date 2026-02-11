@@ -4,4 +4,4 @@
 	msvcrt.dll => /c/WINDOWS/System32/msvcrt.dll (0x7ff87e320000)
 	ucrtbase.dll => /c/WINDOWS/System32/ucrtbase.dll (0x7ff87bd00000)
 	VCRUNTIME140.dll => /c/WINDOWS/SYSTEM32/VCRUNTIME140.dll (0x7ff826740000)
-	lua54.dll => /c/Users/ivan.zemskiy/AppData/Local/Lua/bin/lua54.dll (0x7ff8518a0000)
+	lua54.dll => /c/Users/ivan.zemskiy/AppData/Local/Lua/bin/lua54.dll (0x7ff84dbd0000)
