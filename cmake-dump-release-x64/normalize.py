@@ -1,6 +1,7 @@
 import re
 import subprocess
 from pathlib import Path
+from collections import defaultdict
 
 # Configuration
 DUMP_DIR = Path("./cmake-dump-release-x64")
@@ -34,10 +35,10 @@ def get_fuzzy_key(line):
     if "time date stamp" in line.lower():
         return "timedatestamp"
     # 2. General Hex/Address stripping
-    # Remove hex 0x..., (range to range), and raw 8/16 char hex strings
+    # Remove hex 0x..., (range to range), and raw 4/16 char hex strings
     line = re.sub(r'0x[0-9a-fA-F]+', '', line)
     line = re.sub(r'\([0-9a-fA-F\s]+to[0-9a-fA-F\s]+\)', '', line)
-    line = re.sub(r'\b[0-9a-fA-F]{4,16}\b', '', line)
+    line = re.sub(r'\b[0-9a-fA-F]{1,16}\b', '', line)
     return "".join(line.split())
 
 def get_indent(line):
@@ -61,18 +62,20 @@ def parse_blocks(text):
                  # Condition A: Starts with a digit
                 starts_with_digit = next_line.strip()[:1].isdigit()
                 # Condition B: Indentation is deeper than the last line in block
-                is_deeper_indent = get_indent(next_line) > get_indent(current_block[-1])
+                is_deeper_indent = current_block and get_indent(next_line) > get_indent(current_block[-1])
                 if starts_with_digit or is_deeper_indent:
                     # Continue current block: Add the empty line to maintain spacing
                     if current_block:
                         current_block.append(line)
-            else:
-                # Normal break: Save the current block and reset
-                if current_block:
-                    blocks.append((start_idx, current_block))
-                    current_block = []
+                        continue
+            
+            # Normal break: Save the current block and reset
+            if current_block:
+                blocks.append((start_idx, current_block))
+                current_block = []
             # Prevent leading blank lines in blocks
             continue
+            
         # 2. Start a new block if we aren't currently in one
         if not current_block:
             start_idx = i
@@ -97,43 +100,62 @@ def align_and_save(filename):
         print(f"  [Skip] No Git anchor for {filename}")
         return
 
-    # Map Git Blocks: { fuzzy_header_key : (git_start_line, [original_git_lines]) }
+    # Use first line of block as key:
+    # { fuzzy_header_key : (git_start_line, [original_git_lines]) }
     git_blocks = parse_blocks(git_text)
-    git_map = {get_fuzzy_key(b[1][0]): b for b in git_blocks if b[1]}
+    git_map = {b[1][0]: b for b in git_blocks if b[1]}  # get_fuzzy_key(b[1][0])
 
     work_blocks = parse_blocks(working_text)
-    
-    # Spatial Alignment Canvas
+
     # Prepare a canvas to place blocks at specific line indices
     git_lines_raw = git_text.splitlines()
+    # Define a safe maximum canvas size
     max_lines = max(len(git_lines_raw), len(working_text.splitlines())) * 2
+    # Spatial Alignment Canvas
     canvas = [None] * max_lines
     unplaced_blocks = []
-
+    
+    # Professional 'Infinity' sentinel for sorting new items to the end
+    SORT_TO_END = float('inf')
+    
     for _, w_lines in work_blocks:
-        header_key = get_fuzzy_key(w_lines[0])
+        header_key = w_lines[0]  # get_fuzzy_key(w_lines[0])
         
-        # Check for duplicates in working copy block
-        seen_fuzzy = set()
+        # Track duplicates for warnings
+        seen_fuzzy_counts = defaultdict(int)
         for ln in w_lines:
             fk = get_fuzzy_key(ln)
-            if fk and fk in seen_fuzzy:
-                print(f"  [Warning] Duplicate in {filename}: {ln.strip()[:40]}...")
-            seen_fuzzy.add(fk)
-        
-        w_lines_dup = [f"{l}_{i}" if seen_fuzzy[l] else l for i, l in enumerate(w_lines)]
+            if fk:
+                seen_fuzzy_counts[fk] += 1
+                if seen_fuzzy_counts[fk] > 1:
+                    print(f"  [Warning] Duplicate in {filename}: {ln.strip()[:40]}...")
         
         if header_key in git_map:
             git_start_idx, g_lines = git_map[header_key]
             
-            g_lines_dup = [f"{l}_{i}" if seen_fuzzy[l] else l for i, l in enumerate(g_lines)]
+            # Map fuzzy keys to a list of original indices for positional matching
+            g_positions = defaultdict(list)
+            for idx, gl in enumerate(g_lines):
+                g_positions[get_fuzzy_key(gl)].append(idx)
             
-            # Reorder internal lines using Git sequence as anchor
-            g_order = {get_fuzzy_key(gl): idx for idx, gl in enumerate(g_lines)}
+            # Create a list of tuples: (target_index, original_line)
+            # This aligns the N-th occurrence in 'Work' to the N-th occurrence in 'Git'
+            indexed_w_lines = []
+            for ln in w_lines:
+                fk = get_fuzzy_key(ln)
+                # If fuzzy match exists in Git, take the earliest available index
+                if fk in g_positions and g_positions[fk]:
+                    target_idx = g_positions[fk].pop(0) # Consume the first available Git index
+                else:
+                    target_idx = SORT_TO_END # New line or extra duplicate: send to end of block
+                indexed_w_lines.append((target_idx, ln))
             
-            # Sort working lines based on their fuzzy position in the git block
-            # Lines not in git are moved to the end of the block (index 999)
-            aligned_block = sorted(w_lines, key=lambda l: g_order.get(get_fuzzy_key(l), 999))
+            # Sort lines based on the consumed Git indices
+            #   Note: Items with float('inf') maintain their relative order 
+            #   because Python's sort() is stable.
+            indexed_w_lines.sort(key=lambda x: x[0])
+            # Extract just the lines after sorting
+            aligned_block = [item[1] for item in indexed_w_lines]
             
             # Place block at the exact historical Git line index
             canvas[git_start_idx : git_start_idx + len(aligned_block)] = aligned_block
@@ -154,7 +176,7 @@ def align_and_save(filename):
             output.append("")
         output.extend(b)
 
-    # Save to disk
+    # Save to disk with final rstrip to avoid trailing blank blocks
     fpath.write_text("\n".join(output).rstrip() + "\n", encoding='utf-8')
     print(f"  [Done] Aligned {filename}")
 
@@ -165,7 +187,7 @@ def process_files():
     for fname in FILES_DUMPBIN:
         align_and_save(fname)
         
-    # LDD handling (simpler, usually one block)
+    # LDD handling
     align_and_save(FILE_LDD)
 
 if __name__ == "__main__":
