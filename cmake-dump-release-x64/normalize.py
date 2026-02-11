@@ -120,9 +120,13 @@ def align_and_save(filename):
             if fk and fk in seen_fuzzy:
                 print(f"  [Warning] Duplicate in {filename}: {ln.strip()[:40]}...")
             seen_fuzzy.add(fk)
-
+        
+        w_lines_dup = [f"{l}_{i}" if seen_fuzzy[l] else l for i, l in enumerate(w_lines)]
+        
         if header_key in git_map:
             git_start_idx, g_lines = git_map[header_key]
+            
+            g_lines_dup = [f"{l}_{i}" if seen_fuzzy[l] else l for i, l in enumerate(g_lines)]
             
             # Reorder internal lines using Git sequence as anchor
             g_order = {get_fuzzy_key(gl): idx for idx, gl in enumerate(g_lines)}
