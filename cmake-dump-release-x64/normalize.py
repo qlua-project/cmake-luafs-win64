@@ -37,8 +37,12 @@ def get_fuzzy_key(line):
     # Remove hex 0x..., (range to range), and raw 8/16 char hex strings
     line = re.sub(r'0x[0-9a-fA-F]+', '', line)
     line = re.sub(r'\([0-9a-fA-F\s]+to[0-9a-fA-F\s]+\)', '', line)
-    line = re.sub(r'\b[0-9a-fA-F]{8,16}\b', '', line)
+    line = re.sub(r'\b[0-9a-fA-F]{4,16}\b', '', line)
     return "".join(line.split())
+
+def get_indent(line):
+    """Returns the number of leading spaces in a string."""
+    return len(line) - len(line.lstrip(' '))
 
 def parse_blocks(text):
     """Parses text into a list of tuples: (starting_line_index, [content_lines])."""
@@ -48,15 +52,33 @@ def parse_blocks(text):
     start_idx = 0
     
     for i, line in enumerate(lines):
+        # 1. If line is blank, check if we should end the block
         if not line.strip():
-            if current_block:
-                blocks.append((start_idx, current_block))
-                current_block = []
+            # Peek at the NEXT line to see if it starts with a digit
+            next_idx = i + 1
+            if next_idx < len(lines):
+                next_line = lines[next_idx]
+                 # Condition A: Starts with a digit
+                starts_with_digit = next_line.strip()[:1].isdigit()
+                # Condition B: Indentation is deeper than the last line in block
+                is_deeper_indent = get_indent(next_line) > get_indent(current_block[-1])
+                if starts_with_digit or is_deeper_indent:
+                    # Continue current block: Add the empty line to maintain spacing
+                    if current_block:
+                        current_block.append(line)
+            else:
+                # Normal break: Save the current block and reset
+                if current_block:
+                    blocks.append((start_idx, current_block))
+                    current_block = []
+            # Prevent leading blank lines in blocks
             continue
+        # 2. Start a new block if we aren't currently in one
         if not current_block:
             start_idx = i
         current_block.append(line)
         
+    # 3. Catch the final block
     if current_block:
         blocks.append((start_idx, current_block))
     return blocks
@@ -70,7 +92,7 @@ def align_and_save(filename):
     working_text = fpath.read_text(encoding='utf-8', errors='ignore')
     git_text = get_git_content(fpath)
     
-    # If no anchor (git version), do nothing as requested
+    # If no anchor (git version), do nothing to the working copy
     if not git_text:
         print(f"  [Skip] No Git anchor for {filename}")
         return
@@ -81,6 +103,7 @@ def align_and_save(filename):
 
     work_blocks = parse_blocks(working_text)
     
+    # Spatial Alignment Canvas
     # Prepare a canvas to place blocks at specific line indices
     git_lines_raw = git_text.splitlines()
     max_lines = max(len(git_lines_raw), len(working_text.splitlines())) * 2
@@ -91,18 +114,21 @@ def align_and_save(filename):
         header_key = get_fuzzy_key(w_lines[0])
         
         # Check for duplicates in working copy block
-        seen_fuzzy = {}
+        seen_fuzzy = set()
         for ln in w_lines:
             fk = get_fuzzy_key(ln)
-            if fk in seen_fuzzy:
-                print(f"  [Warning] Duplicate in {filename}: {ln.strip()[:50]}...")
-            seen_fuzzy[fk] = ln
+            if fk and fk in seen_fuzzy:
+                print(f"  [Warning] Duplicate in {filename}: {ln.strip()[:40]}...")
+            seen_fuzzy.add(fk)
 
         if header_key in git_map:
             git_start_idx, g_lines = git_map[header_key]
             
             # Reorder internal lines using Git sequence as anchor
             g_order = {get_fuzzy_key(gl): idx for idx, gl in enumerate(g_lines)}
+            
+            # Sort working lines based on their fuzzy position in the git block
+            # Lines not in git are moved to the end of the block (index 999)
             aligned_block = sorted(w_lines, key=lambda l: g_order.get(get_fuzzy_key(l), 999))
             
             # Place block at the exact historical Git line index
@@ -110,7 +136,7 @@ def align_and_save(filename):
         else:
             unplaced_blocks.append(w_lines)
 
-    # Reconstruct final file
+    # Reconstruct final file structure
     output = []
     for i in range(max_lines):
         if canvas[i] is not None:
@@ -118,12 +144,13 @@ def align_and_save(filename):
         elif i < len(git_lines_raw) and not git_lines_raw[i].strip():
             output.append("") # Preserve original empty line structure
             
-    # Append completely new blocks at the end
+    # Append completely new blocks (those not found in git) to the end
     for b in unplaced_blocks:
         if output and output[-1] != "":
             output.append("")
         output.extend(b)
 
+    # Save to disk
     fpath.write_text("\n".join(output).rstrip() + "\n", encoding='utf-8')
     print(f"  [Done] Aligned {filename}")
 
