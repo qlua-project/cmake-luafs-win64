@@ -1,0 +1,7 @@
+	ntdll.dll => /c/WINDOWS/SYSTEM32/ntdll.dll (0x7ff87ebe0000)
+	KERNEL32.DLL => /c/WINDOWS/System32/KERNEL32.DLL (0x7ff87d0b0000)
+	KERNELBASE.dll => /c/WINDOWS/System32/KERNELBASE.dll (0x7ff87b900000)
+	msvcrt.dll => /c/WINDOWS/System32/msvcrt.dll (0x7ff87e320000)
+	ucrtbase.dll => /c/WINDOWS/System32/ucrtbase.dll (0x7ff87bd00000)
+	VCRUNTIME140.dll => /c/WINDOWS/SYSTEM32/VCRUNTIME140.dll (0x7ff826740000)
+	lua54.dll => /c/Users/ivan.zemskiy/AppData/Local/Lua/bin/lua54.dll (0x7ff844d10000)
