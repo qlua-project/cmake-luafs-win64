@@ -3,7 +3,8 @@ project ( luafs VERSION 1.8.0
                 LANGUAGES C )
 
 set ( LFS_DIR "src" CACHE PATH "Source Directory of 'lunarmodules/luafilesystem' module" )
-set ( ENV{LUA_DIR} "externals/lua" )
+set ( ENV{LUA_DIR} "${PROJECT_SOURCE_DIR}/externals/lua" )
+# "override" the default installation path (C:/Program Files (x86)/luafs)
 if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
   set_property ( CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE ${PROJECT_SOURCE_DIR} )
 endif ()
