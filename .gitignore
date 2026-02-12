@@ -2,3 +2,5 @@ cmake-build-debug-x64
 cmake-build-release-x64
 
 build
+
+lua_modules/*
