@@ -4,7 +4,12 @@ from pathlib import Path
 from collections import defaultdict
 
 # Configuration
-DUMP_DIR = Path("./cmake-dump-release-x64")
+git_root_str = subprocess.check_output(
+    ['git', 'rev-parse', '--show-toplevel'], 
+    encoding='utf-8'
+).strip()
+
+DUMP_DIR = Path(__file__).resolve().parent.relative_to(git_root_str)
 FILES_DUMPBIN = [
     "lfs.dll.dependents.txt",
     "lfs.dll.exports.txt", 
